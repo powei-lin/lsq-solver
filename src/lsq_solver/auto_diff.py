@@ -1,6 +1,7 @@
 from functools import partial
 import numpy as np
-from num_dual import jacobian
+from num_dual import jacobian, gradient
+from typing import Callable
 # the value follows the wiki https://en.wikipedia.org/wiki/Numerical_differentiation
 ROUNDING_ERROR = 1.48e-8
 
@@ -10,7 +11,7 @@ def make_jac(name: str, jac_shape, func: callable):
         return partial(diff_2point, jac_shape, func)    # partial other parameters since we need a single-input function
     elif name == '3-point':
         return partial(diff_3point, jac_shape, func)
-    elif name == 'auto':
+    elif name == 'dual':
         return partial(diff_auto, func)
     else:
         raise ValueError('Unsupported jacobian function.')
@@ -60,7 +61,7 @@ def diff_3point(jac_shape, func: callable, *variables):
             jac_col += 1
     return jac
 
-def diff_auto(func: callable, variable):
+def diff_auto(func: Callable[[np.ndarray], np.ndarray], variable: np.ndarray):
     """
     auto diff, only one vector input acceptable
     """
