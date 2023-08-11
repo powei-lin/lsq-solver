@@ -61,6 +61,7 @@ def diff_3point(jac_shape, func: callable, *variables):
             jac_col += 1
     return jac
 
+
 def diff_auto(func: Callable[[np.ndarray], np.ndarray], variable: np.ndarray):
     """
     auto diff, only one vector input acceptable
