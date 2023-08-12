@@ -31,9 +31,9 @@ dependencies = [
 ]
 
 [project.urls]
-Documentation = "https://github.com/unknown/lsq-solver#readme"
-Issues = "https://github.com/unknown/lsq-solver/issues"
-Source = "https://github.com/unknown/lsq-solver"
+Documentation = "https://github.com/powei-lin/lsq-solver#readme"
+Issues = "https://github.com/powei-lin/lsq-solver/issues"
+Source = "https://github.com/powei-lin/lsq-solver"
 
 [tool.hatch.version]
 path = "src/lsq_solver/__about__.py"
@@ -168,11 +168,7 @@ exclude_lines = [
 ]
 
 [tool.hatch.build]
-include = [
-  "pkg/*.py",
-  "/tests",
-]
 exclude = [
   "*.json",
-  "pkg/_compat.py",
+  "/tests",
 ]
