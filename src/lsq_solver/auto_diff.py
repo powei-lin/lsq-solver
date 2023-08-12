@@ -6,6 +6,7 @@ from num_dual import jacobian
 
 # the value follows the wiki https://en.wikipedia.org/wiki/Numerical_differentiation
 ROUNDING_ERROR = 1.48e-8
+AUTO_DIFF_NAMES = {"2-point", "3-point", "dual"}
 
 
 def make_jac(name: str, jac_shape, func: callable) -> callable:
