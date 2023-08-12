@@ -12,6 +12,7 @@ license = "MIT"
 keywords = []
 authors = [
   { name = "Powei Lin", email = "poweilin1994@gmail.com" },
+  { name = "Jerry Zhao", email = "jerry.zy@foxmail.com" },
 ]
 classifiers = [
   "Development Status :: 4 - Beta",
