@@ -1,25 +1,30 @@
 from functools import partial
-import numpy as np
-from num_dual import jacobian, gradient
 from typing import Callable
+
+import numpy as np
+from num_dual import jacobian
+
 # the value follows the wiki https://en.wikipedia.org/wiki/Numerical_differentiation
 ROUNDING_ERROR = 1.48e-8
 
 
 def make_jac(name: str, jac_shape, func: callable):
-    if name == '2-point':
+    if name == "2-point":
         return partial(diff_2point, jac_shape, func)    # partial other parameters since we need a single-input function
-    elif name == '3-point':
+    elif name == "3-point":
         return partial(diff_3point, jac_shape, func)
-    elif name == 'dual':
+    elif name == "dual":
         return partial(diff_auto, func)
     else:
-        raise ValueError('Unsupported jacobian function.')
+        msg = "Unsupported jacobian function."
+        raise ValueError(msg)
 
 
 def diff_2point(jac_shape, func: callable, *variables):
     """
     2-point numeric finite difference. f'(x) = (f(x+h) - f(x)) / h
+    Args:
+        jac_shape: (residual_num, variable_num)
     """
     f0 = func(*variables)
     jac = np.zeros(jac_shape, dtype=np.float64)

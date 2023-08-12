@@ -1,8 +1,13 @@
 import numpy as np
 
+ROTATION_VEC_SIZE = 3
+
 
 def rotation_matrix(rvec: np.ndarray) -> np.ndarray:
     """Return the rotation matrix associated with counterclockwise rotation about the given rotation vector."""
+    if rvec.size != ROTATION_VEC_SIZE:
+        msg = f"rvec size should be 3, got {rvec.size}"
+        raise ValueError(msg)
     theta = np.linalg.norm(rvec)
     axis = rvec / theta
     a = np.cos(theta / 2.0)

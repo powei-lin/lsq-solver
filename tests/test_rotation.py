@@ -1,6 +1,8 @@
-from lsq_solver.rotation import rotation_matrix
 import numpy as np
 from scipy.spatial.transform import Rotation
+
+from lsq_solver.rotation import rotation_matrix
+
 
 def test_rotation():
     rvec = np.array([0.1, 0.2, 0.3])

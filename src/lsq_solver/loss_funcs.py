@@ -1,23 +1,25 @@
-import numpy as np
 from functools import partial
+
+import numpy as np
 
 
 def make_loss(name: str, f_scale=1.0):
-    if name == 'linear':
-        return partial(linear, f_scale=f_scale)
-    elif name == 'soft_l1':
+    if name == "linear":
+        return linear
+    elif name == "soft_l1":
         return partial(soft_l1, f_scale=f_scale)
-    elif name == 'huber':
+    elif name == "huber":
         return partial(huber, f_scale=f_scale)
-    elif name == 'cauchy':
+    elif name == "cauchy":
         return partial(cauchy, f_scale=f_scale)
-    elif name == 'arctan':
+    elif name == "arctan":
         return partial(arctan, f_scale=f_scale)
     else:
-        raise ValueError('Unsupported loss function.')
+        msg = "Unsupported loss function."
+        raise ValueError(msg)
 
 
-def linear(z: np.ndarray, f_scale):
+def linear(z: np.ndarray):
     """
     rho(z) = z
     No loss function at all.
