@@ -38,9 +38,9 @@ class LeastSquaresProblem:
         self._address_bounds_map = {}
         self._bounds = None
 
-    def add_residual_block(self, dim_residual: int, residual_func, *variables, loss_func="linear", f_scale=1.0,
+    def add_residual_block(self, dim_residual: int, residual_func: callable, *variables,
+                           loss_func="linear", f_scale=1.0,
                            jac_func="2-point", jac_sparsity=None):
-
         if dim_residual <= 0:
             err_msg = f"dim_residual should > 0, got {dim_residual}"
             raise ValueError(err_msg)
@@ -63,13 +63,13 @@ class LeastSquaresProblem:
             if len(variable.shape) != 1:
                 err_msg = f"Variable should only have one axis, got {len(variable.shape)}"
                 raise ValueError(err_msg)
-            dim = variable.shape[0]
-            residual_block.dim_variable += dim
+            variable_dim = variable.shape[0]
+            residual_block.dim_variable += variable_dim
 
             address = variable.__array_interface__["data"][0]
             if address not in self._address_col_range_map:
-                new_range = (self._dim_variable, self._dim_variable + dim)
-                self._dim_variable += dim
+                new_range = (self._dim_variable, self._dim_variable + variable_dim)
+                self._dim_variable += variable_dim
                 self._address_col_range_map[address] = new_range
                 self._col_range_variable_map[new_range] = variable
             residual_block.col_ranges.append(self._address_col_range_map[address])
@@ -121,7 +121,7 @@ class LeastSquaresProblem:
             raise ValueError(err_msg)
         self._address_bounds_map[address] = (lower_bound, upper_bound)
 
-    def solve(self, method="trf", ftol=1e-8, xtol=1e-8, gtol=1e-8, max_nfev=None, x_scale="jac", verbose=1):
+    def solve(self, method="trf", ftol=1e-8, xtol=1e-8, gtol=1e-8, max_nfev=None, x_scale="jac", verbose=0):
         """
         solve the problem.
         :param method: {'trf', 'dogleg', 'lm'}
