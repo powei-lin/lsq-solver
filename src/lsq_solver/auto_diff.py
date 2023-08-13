@@ -14,9 +14,9 @@ def make_jac(name: str, jac_shape, func: callable) -> callable:
         return partial(diff_2point, jac_shape, func)    # partial other parameters since we need a single-input function
     elif name == "3-point":
         return partial(diff_3point, jac_shape, func)
-    elif name == "dual":
+    elif name == "dual":  # slower but precise
         return partial(diff_auto_multiple_variable, func)
-    elif name == "dual2":
+    elif name == "dual2":  # slowest but easier to ues than dual
         return partial(diff_dual, func)
     else:
         msg = "Unsupported jacobian function."
