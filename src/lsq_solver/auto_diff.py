@@ -2,11 +2,11 @@ from functools import partial
 from typing import Callable
 
 import numpy as np
-from num_dual import jacobian
+from num_dual import Dual64, jacobian
 
 # the value follows the wiki https://en.wikipedia.org/wiki/Numerical_differentiation
 ROUNDING_ERROR = 1.48e-8
-AUTO_DIFF_NAMES = {"2-point", "3-point", "dual"}
+AUTO_DIFF_NAMES = {"2-point", "3-point", "dual", "dual2"}
 
 
 def make_jac(name: str, jac_shape, func: callable) -> callable:
@@ -16,6 +16,8 @@ def make_jac(name: str, jac_shape, func: callable) -> callable:
         return partial(diff_3point, jac_shape, func)
     elif name == "dual":
         return partial(diff_auto_multiple_variable, func)
+    elif name == "dual2":
+        return partial(diff_dual, func)
     else:
         msg = "Unsupported jacobian function."
         raise ValueError(msg)
@@ -95,3 +97,21 @@ def diff_auto_multiple_variable(func: callable, *variables) -> np.ndarray:
         j = jacobian(ft, v)
         jacobian_matrices.append(np.array(j[1], dtype=np.float64))
     return np.hstack(jacobian_matrices)
+
+
+def diff_dual(func: callable, *variables) -> np.ndarray:
+    res = func(*variables)
+    jac_list = []
+
+    for var_idx, var in enumerate(variables):
+        var_len = var.shape[0]
+
+        new_vars = list(variables)  # Convert to list for inplace modification
+        for j in range(var_len):
+            new_vars[var_idx] = np.array([Dual64(var[k], 1) if k == j else var[k] for k in range(var_len)])
+            r0 = func(*new_vars)
+            jd = r0 - res
+            jd = [j.first_derivative if isinstance(j, Dual64) else j for j in jd]
+            jac_list.append(jd)
+
+    return np.vstack(jac_list).T
