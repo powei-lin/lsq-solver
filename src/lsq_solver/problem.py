@@ -3,9 +3,8 @@ import numpy as np
 from scipy.optimize import least_squares
 from scipy.sparse import dok_matrix
 
-from lsq_solver.auto_diff import make_jac
+from lsq_solver._residual_block import _ResidualBlock
 from lsq_solver.loss_funcs import make_loss
-from lsq_solver.residual_block import _ResidualBlock
 
 
 class LeastSquaresProblem:
@@ -60,9 +59,9 @@ class LeastSquaresProblem:
         if callable(jac_func):
             residual_block.jac_func = jac_func
         else:
-            residual_block.jac_func = make_jac(jac_func,
-                                               (residual_block.dim_residual, residual_block.dim_variable),
-                                               residual_block.residual_func)
+            residual_block.make_jacobian(jac_func,
+                                         residual_block.dim_residual, residual_block.dim_variable,
+                                         residual_block.residual_func)
 
         if jac_sparsity is None:
             residual_block.jac_sparsity = None
