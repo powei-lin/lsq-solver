@@ -21,5 +21,5 @@ class _ResidualBlock:
 
     def make_jacobian(self, jac_func, dim_residual: int, dim_variable: int, residual_func):
         self.jac_func = make_jac(jac_func,
-                                 (dim_residual, dim_variable),
-                                 residual_func)
+                                (dim_residual, dim_variable),
+                                residual_func)
