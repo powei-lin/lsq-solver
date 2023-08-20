@@ -23,6 +23,7 @@ def test_rotation():
 
 @pytest.mark.parametrize("auto_diff_name", AUTO_DIFF_NAMES)
 def test_rotation_problem(auto_diff_name: str):
+    np.random.seed(0)
     p3ds_gt = (np.random.random((100, 3)) * 100 + np.array([0, 0, 1])).T
     rvec_gt = np.random.random(3)
     rmat_gt = Rotation.from_rotvec(rvec_gt).as_matrix()

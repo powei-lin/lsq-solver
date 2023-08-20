@@ -1,4 +1,3 @@
-from dataclasses import dataclass
 
 import numpy as np
 from scipy.optimize import least_squares
@@ -6,23 +5,7 @@ from scipy.sparse import dok_matrix
 
 from lsq_solver.auto_diff import make_jac
 from lsq_solver.loss_funcs import make_loss
-
-
-@dataclass
-class _ResidualBlock:
-    """
-    DO NOT USE THIS CLASS DIRECTLY!
-    """
-    dim_residual: int
-    residual_func: callable
-    dim_variable: int = 0
-    loss_func = None
-    jac_func = None
-    jac_sparsity = None
-
-    def __post_init__(self):
-        self.row_range = (0, 0)
-        self.col_ranges = []
+from lsq_solver.residual_block import _ResidualBlock
 
 
 class LeastSquaresProblem:
