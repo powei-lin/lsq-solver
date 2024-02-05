@@ -25,8 +25,10 @@ def f_one_input_two_output_jac(x):
     return np.array([[1, 2, 3.0], [0.0, 2 * x[1], 1]])
 
 
-FUNC_JAC_PAIR_LIST = [(f_one_input_one_output, f_one_input_one_output_jac, (1, 3)),
-                      (f_one_input_two_output, f_one_input_two_output_jac, (2, 3))]
+FUNC_JAC_PAIR_LIST = [
+    (f_one_input_one_output, f_one_input_one_output_jac, (1, 3)),
+    (f_one_input_two_output, f_one_input_two_output_jac, (2, 3)),
+]
 
 
 @pytest.mark.parametrize("auto_diff_name, func_and_jac_gt", product(AUTO_DIFF_NAMES, FUNC_JAC_PAIR_LIST))

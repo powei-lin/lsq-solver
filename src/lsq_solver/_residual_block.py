@@ -8,6 +8,7 @@ class _ResidualBlock:
     """
     DO NOT USE THIS CLASS DIRECTLY!
     """
+
     dim_residual: int
     residual_func: callable
     dim_variable: int = 0
@@ -20,6 +21,4 @@ class _ResidualBlock:
         self.col_ranges = []
 
     def make_jacobian(self, jac_func, dim_residual: int, dim_variable: int, residual_func):
-        self.jac_func = make_jac(jac_func,
-                                (dim_residual, dim_variable),
-                                residual_func)
+        self.jac_func = make_jac(jac_func, (dim_residual, dim_variable), residual_func)

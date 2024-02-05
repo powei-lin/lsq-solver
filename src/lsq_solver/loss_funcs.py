@@ -113,6 +113,6 @@ def arctan(z: np.ndarray, f_scale):
     z = ic2 * z
 
     loss[0, :] = c2 * np.arctan(z)
-    loss[1, :] = 1.0 / (1.0 + z ** 2)
+    loss[1, :] = 1.0 / (1.0 + z**2)
     loss[2, :] = -ic2 * 2 * z * (loss[1, :] ** 2)
     return loss

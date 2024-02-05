@@ -1,11 +1,20 @@
-import numpy as np
-from lsq_solver import LeastSquaresProblem
-from lsq_solver.auto_diff import diff_2point, diff_3point, diff_auto, diff_auto_multiple_variable, diff_dual, AUTO_DIFF_NAMES
-from lsq_solver.rotation import rotation_matrix
 from functools import partial
-from num_dual import jacobian, gradient, Dual64, first_derivative, gradient, second_partial_derivative
-from scipy.spatial.transform import Rotation
 from time import perf_counter
+
+import numpy as np
+from num_dual import Dual64, first_derivative, gradient, jacobian, second_partial_derivative
+from scipy.spatial.transform import Rotation
+
+from lsq_solver import LeastSquaresProblem
+from lsq_solver.auto_diff import (
+    AUTO_DIFF_NAMES,
+    diff_2point,
+    diff_3point,
+    diff_auto,
+    diff_auto_multiple_variable,
+    diff_dual,
+)
+from lsq_solver.rotation import rotation_matrix
 
 
 def cost(p3ds: np.ndarray, p2ds: np.ndarray, rvec: np.ndarray) -> np.ndarray:
@@ -13,7 +22,7 @@ def cost(p3ds: np.ndarray, p2ds: np.ndarray, rvec: np.ndarray) -> np.ndarray:
     return (p3dd[:2, :] / p3dd[2:, :] - p2ds).flatten()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     p_num = 1000
     p3ds_gt = (np.random.random((p_num, 3)) * 100 + np.array([0, 0, 1])).T
     rvec_gt = np.random.random(3)

@@ -27,7 +27,15 @@ classifiers = [
 ]
 dependencies = [
   "scipy",
-  "num-dual"
+]
+[project.optional-dependencies]
+dual = [
+  "num-dual",
+]
+
+# extras
+features = [
+  "dual",
 ]
 
 [project.urls]
@@ -42,6 +50,9 @@ path = "src/lsq_solver/__about__.py"
 dependencies = [
   "coverage[toml]>=6.5",
   "pytest",
+]
+features = [
+  "dual",
 ]
 [tool.hatch.envs.default.scripts]
 test = "pytest {args:tests}"

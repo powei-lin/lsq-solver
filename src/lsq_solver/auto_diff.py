@@ -2,7 +2,13 @@ from functools import partial
 from typing import Callable
 
 import numpy as np
-from num_dual import Dual64, jacobian
+
+try:
+    from num_dual import Dual64, jacobian
+except ImportError:
+    _has_dual = False
+else:
+    _has_dual = True
 
 # the value follows the wiki https://en.wikipedia.org/wiki/Numerical_differentiation
 ROUNDING_ERROR = 1.48e-8
@@ -11,7 +17,7 @@ AUTO_DIFF_NAMES = {"2-point", "3-point", "dual", "dual2"}
 
 def make_jac(name: str, jac_shape, func: callable) -> callable:
     if name == "2-point":
-        return partial(diff_2point, jac_shape, func)    # partial other parameters since we need a single-input function
+        return partial(diff_2point, jac_shape, func)  # partial other parameters since we need a single-input function
     elif name == "3-point":
         return partial(diff_3point, jac_shape, func)
     elif name == "dual":  # slower but precise
@@ -74,7 +80,11 @@ def diff_auto(func: Callable[[np.ndarray], np.ndarray], variable: np.ndarray):
     """
     auto diff, only one vector input acceptable
     """
-    return np.array(jacobian(func, variable)[1], dtype=np.float64)
+    if _has_dual:
+        return np.array(jacobian(func, variable)[1], dtype=np.float64)
+    else:
+        err_msg = "Try pip install lsq_solver[dual]"
+        raise RuntimeError(err_msg)
 
 
 class Bind(partial):
@@ -90,6 +100,9 @@ class Bind(partial):
 
 
 def diff_auto_multiple_variable(func: callable, *variables) -> np.ndarray:
+    if not _has_dual:
+        err_msg = "Try pip install lsq_solver[dual]"
+        raise RuntimeError(err_msg)
     jacobian_matrices = []
     for i, v in enumerate(variables):
         vs = (vv if j != i else ... for (j, vv) in enumerate(variables))
@@ -100,6 +113,9 @@ def diff_auto_multiple_variable(func: callable, *variables) -> np.ndarray:
 
 
 def diff_dual(func: callable, *variables) -> np.ndarray:
+    if not _has_dual:
+        err_msg = "Try pip install lsq_solver[dual]"
+        raise RuntimeError(err_msg)
     res = func(*variables)
     jac_list = []
 
