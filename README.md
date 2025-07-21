@@ -2,6 +2,7 @@
 
 [![PyPI - Version](https://img.shields.io/pypi/v/lsq-solver.svg)](https://pypi.org/project/lsq-solver)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/lsq-solver.svg)](https://pypi.org/project/lsq-solver)
+[![PyPI Downloads](https://static.pepy.tech/badge/lsq-solver)](https://pepy.tech/projects/lsq-solver)
 
 -----
 
