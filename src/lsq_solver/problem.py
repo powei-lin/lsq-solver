@@ -185,9 +185,9 @@ class LeastSquaresProblem:
         for residual_block in self._residual_blocks:
             variables = []
             for col_range in residual_block.col_ranges:
-                variables.append(x[col_range[0] : col_range[1]])
+                variables.append(x[col_range[0]: col_range[1]])
             row_range = residual_block.row_range
-            y[row_range[0] : row_range[1]] = residual_block.residual_func(*variables)
+            y[row_range[0]: row_range[1]] = residual_block.residual_func(*variables)
         return y
 
     def _batch_jac(self, x):
@@ -200,7 +200,7 @@ class LeastSquaresProblem:
         for residual_block in self._residual_blocks:
             variables = []
             for col_range in residual_block.col_ranges:
-                variables.append(x[col_range[0] : col_range[1]])
+                variables.append(x[col_range[0]: col_range[1]])
             # calculate jacobian matrix at current state
             jac = residual_block.jac_func(*variables)
             # set jacobian matrix to the whole-problem jacobian.
@@ -208,7 +208,7 @@ class LeastSquaresProblem:
             shift = 0
             for col_range in residual_block.col_ranges:
                 dim = col_range[1] - col_range[0]
-                jacobian_matrix[row_range[0] : row_range[1], col_range[0] : col_range[1]] = jac[:, shift : shift + dim]
+                jacobian_matrix[row_range[0]: row_range[1], col_range[0]: col_range[1]] = jac[:, shift: shift + dim]
                 shift += dim
 
         # mask out jacobian blocks of fixed variables
@@ -216,7 +216,7 @@ class LeastSquaresProblem:
             col_range = self._address_col_range_map.get(address)
             if col_range is None:
                 continue
-            jacobian_matrix[:, col_range[0] : col_range[1]] = 0
+            jacobian_matrix[:, col_range[0]: col_range[1]] = 0
 
         return jacobian_matrix
 
@@ -233,14 +233,14 @@ class LeastSquaresProblem:
         loss = np.zeros((3, z.shape[0]), dtype=np.float64)
         for residual_block in self._residual_blocks:
             row_range = residual_block.row_range
-            loss[:, row_range[0] : row_range[1]] = residual_block.loss_func(z[row_range[0] : row_range[1]])
+            loss[:, row_range[0]: row_range[1]] = residual_block.loss_func(z[row_range[0]: row_range[1]])
         return loss
 
     def _initialize(self):
         # set initial state
         self._x0 = np.zeros(self._dim_variable, dtype=np.float64)
         for col_range, x0 in self._col_range_variable_map.items():
-            self._x0[col_range[0] : col_range[1]] = x0
+            self._x0[col_range[0]: col_range[1]] = x0
 
         # set state bounds
         self._bounds = [np.empty(self._x0.shape, dtype=np.float64), np.empty(self._x0.shape, dtype=np.float64)]
@@ -248,8 +248,8 @@ class LeastSquaresProblem:
         self._bounds[1][:] = np.inf
         for address, bound in self._address_bounds_map.items():
             col_range = self._address_col_range_map[address]
-            self._bounds[0][col_range[0] : col_range[1]] = bound[0]
-            self._bounds[1][col_range[0] : col_range[1]] = bound[1]
+            self._bounds[0][col_range[0]: col_range[1]] = bound[0]
+            self._bounds[1][col_range[0]: col_range[1]] = bound[1]
 
         # set jacobian sparsity for the whole problem
         self._jac_sparsity = dok_matrix((self._dim_residual, self._dim_variable), dtype=int)
@@ -263,8 +263,8 @@ class LeastSquaresProblem:
             shift = 0
             for col_range in residual_block.col_ranges:
                 dim = col_range[1] - col_range[0]
-                self._jac_sparsity[row_range[0] : row_range[1], col_range[0] : col_range[1]] = jac_sparsity[
-                    :, shift : shift + dim
+                self._jac_sparsity[row_range[0]: row_range[1], col_range[0]: col_range[1]] = jac_sparsity[
+                    :, shift: shift + dim
                 ]
                 shift += dim
 
@@ -273,8 +273,8 @@ class LeastSquaresProblem:
             col_range = self._address_col_range_map.get(address)
             if col_range is None:
                 continue
-            self._jac_sparsity[:, col_range[0] : col_range[1]] = 0
+            self._jac_sparsity[:, col_range[0]: col_range[1]] = 0
 
     def _write_back_to_variables(self, x):
         for col_range, variable in self._col_range_variable_map.items():
-            variable[:] = x[col_range[0] : col_range[1]]
+            variable[:] = x[col_range[0]: col_range[1]]
